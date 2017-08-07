@@ -37,15 +37,116 @@ const sierraAPI = require('@sydneyunilibrary/sierra-api-as-promised').v4
 
 ## Calling the API
 
-### Authentication and bearer tokens
+See [the Wiki](https://github.com/SydneyUniLibrary/sierra-api-as-promised/wiki). 
 
-sierra-api-as-promised will take care of authenicating using `SIERRA_API_KEY` and `SIERRA_API_SECRET`
-and obtaining a bearer token on your behalf. It will do this when you make the first API call.
-It will reuse the bearer token until it expires, typically after 1 hour.
-After the bearer token expires, the next API call will reauthenticate and obtain a new bearer token.
- 
- 
 
+### Example 1
+
+The following Node.js v8 script prints the entries in the Patron Type table. 
+
+```javascript
+'use strict'
+
+const sierraApi = require('.').v4
+
+async function printPatronTypes() {
+  let metadataArray = await sierraApi.patrons.getMetadata({ fields: 'patronType' })
+  for (let metadata of metadataArray) {
+    console.log('\nTable: %s\n', metadata.field)
+    console.log('Code\tDesc')
+    for (let metadataValue of metadata.values) {
+      console.log('%s\t%s', metadataValue.code, metadataValue.desc)
+    }
+  }
+}
+
+printPatronTypes().catch(console.error)
+```
+
+
+### Example 2
+
+The following Node.js v8 script submits a query equivalent to the following classic Boolean Search
+and then exports some of the patron record fields as a tab-delimited file.
+
+Term | Operator | _ | Type   | Field      | Condition                | Value A | Value B | _
+-----|----------|---|--------|------------|--------------------------|---------|---------|---
+1    |          |   | PATRON | TOT CHKOUT | greater than             | 100     |         | 
+2    | AND      | ( | PATRON | MONEY OWED | greater than or equal to | 20      |         |
+3    | OR       |   | PATRON | OD PENALTY | greater than or equal to | 5       |         | )
+
+So that this example is not too long and complicated, it only exports the first 10 patrons.
+
+```javascript
+'use strict'
+
+const sierraApi = require('.').v4
+
+
+async function findAndExportPatrons() {
+
+  const booleanSearch = [
+    {
+      'target': { 'record': { 'type': 'patron' }, 'id': 48 /* TOT CHKOUT */ },
+      'expr': { 'op': 'greater_than', 'operands': [ '100' ] },
+    },
+    'and',
+    [
+      {
+        'target': { 'record': { 'type': 'patron' }, 'id': 96 /* MONEY OWED */ },
+        'expr': { 'op': 'greater_than_or_equal', 'operands': [ '20' ] },
+      },
+      'or',
+      {
+        'target': { 'record': { 'type': 'patron' }, 'id': 105 /* OD PENALTY */ },
+        'expr': { 'op': 'greater_than_or_equal', 'operands': [ '5' ] },
+      },
+    ],
+  ]
+
+  const exportFields = [
+      'id',
+      'barcodes',
+      'patronType',
+      'homeLibraryCode',
+      'moneyOwed',
+  ]
+
+  /* Submit the query, getting back a list of links (full URLs to the patron) */
+  let patronLinks = await sierraApi.patrons.query(0, 10, booleanSearch)
+
+  /* Transform the list of links to a list of IDs */
+  let patronIDs = patronLinks.entries.map(({ link }) => link.substr(link.lastIndexOf('/') + 1))
+
+  /* The patron records with those IDs */
+  let patronResultSet = await sierraApi.patrons.getPatrons({ id: patronIDs, fields: exportFields })
+
+  /* Export the patrons as a tab-delimited file */
+  console.log(exportFields.join('\t'))
+  for (let patron of patronResultSet.entries) {
+
+    let values = exportFields.map(fieldName => {
+      let v = patron[ fieldName ] || ''
+
+      /* Flatten an Array with a single value into just its value. */
+      if (Array.isArray(v) && v.length === 1) {
+        v = v[0]
+      }
+      /* Export non-simple values as JSON. */
+      if (typeof v !== 'string') {
+        v = JSON.stringify(v)
+      }
+
+      return v
+    })
+
+    console.log(values.join('\t'))
+  }
+
+}
+
+findAndExportPatrons().catch(console.error)
+```
 
 ----
 
