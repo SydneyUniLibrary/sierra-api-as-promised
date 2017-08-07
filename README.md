@@ -4,8 +4,6 @@ Simplifies access to the Sierra REST APIs from Node.js.
 
 
 
-----
-
 ## How to use
 
 ```
@@ -32,8 +30,6 @@ const sierraAPI = require('@sydneyunilibrary/sierra-api-as-promised').v4
 
 
 
-
-----
 
 ## Calling the API
 
@@ -148,8 +144,6 @@ async function findAndExportPatrons() {
 findAndExportPatrons().catch(console.error)
 ```
 
-----
-
 ## Configuration
 
 Configurate sierra-api-as-promised by setting environment variables.
@@ -177,8 +171,6 @@ before running your code, the value you set will take precedence over the value 
 
 
 
-
-----
 
 ## License
 
