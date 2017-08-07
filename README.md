@@ -43,7 +43,7 @@ The following Node.js v8 script prints the entries in the Patron Type table.
 ```javascript
 'use strict'
 
-const sierraApi = require('.').v4
+const sierraApi = require('@sydneyunilibrary/sierra-api-as-promised').v4
 
 async function printPatronTypes() {
   let metadataArray = await sierraApi.patrons.getMetadata({ fields: 'patronType' })
@@ -76,7 +76,7 @@ So that this example is not too long and complicated, it only exports the first 
 ```javascript
 'use strict'
 
-const sierraApi = require('.').v4
+const sierraApi = require('@sydneyunilibrary/sierra-api-as-promised').v4
 
 
 async function findAndExportPatrons() {
