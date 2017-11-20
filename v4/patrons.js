@@ -60,6 +60,20 @@ class SierraPatronApi_v4 {
   }
 
 
+  getPatronFines(idOrUrl, { limit, offset, fields, assessedDate } = {}) {
+    fields = qsUtils.joinArray(fields)
+    const apiUrl = `${this._resolveIdOrUrlToApiUrl(idOrUrl)}/fines`
+    return this.connection.get(apiUrl, { limit, offset, fields, assessedDate })
+  }
+
+
+  getPatronHolds(idOrUrl, { limit, offset, fields } = {}) {
+    fields = qsUtils.joinArray(fields)
+    const apiUrl = `${this._resolveIdOrUrlToApiUrl(idOrUrl)}/holds`
+    return this.connection.get(apiUrl, { limit, offset, fields })
+  }
+
+
   getMetadata({ fields, language } = {}) {
     fields = qsUtils.joinArray(fields)
     return this.connection.get('/v4/patrons/metadata', { fields, language })
