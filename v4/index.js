@@ -1,5 +1,3 @@
-'use strict'
-
 /*
  Copyright (C) 2017  The University of Sydney Library
 
@@ -17,8 +15,12 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+'use strict'
+
+
 const about = require('../about')
 const connection = require('./connection')
+
 
 module.exports = {
   about,
