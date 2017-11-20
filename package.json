@@ -9,6 +9,7 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
+    "@sydneyunilibrary/sierra-record-id": "github:SydneyUniLibrary/sierra-record-id#v0.2.0",
     "client-oauth2": "^4.1.0",
     "request": "^2.83.0",
     "request-promise-any": "^1.0.5"
