@@ -19,6 +19,7 @@
 
 
 const qsUtils = require('../qs-utils')
+const { AbsoluteV4ApiUrl, RecordId, RecordNumber, RelativeV4ApiUrl } = require('@sydneyunilibrary/sierra-record-id')
 
 
 class SierraPatronApi_v4 {
@@ -28,11 +29,10 @@ class SierraPatronApi_v4 {
   }
 
 
-  getCheckout(checkoutIdOrURL, { fields } = {}) {
-    checkoutIdOrURL = checkoutIdOrURL.toString()
-    let url = checkoutIdOrURL.indexOf('://') === -1 ? `patrons/checkouts/${checkoutIdOrURL}` : checkoutIdOrURL
+  getCheckout(checkoutIdOrUrl, { fields } = {}) {
+    const apiUrl = this._resolveCheckoutIdOrUrlToApiUrl(checkoutIdOrUrl)
     fields = qsUtils.joinArray(fields)
-    return this.connection.get(url, { fields })
+    return this.connection.get(apiUrl, { fields })
   }
 
 
@@ -40,46 +40,63 @@ class SierraPatronApi_v4 {
     id = qsUtils.joinArray(id)
     fields = qsUtils.joinArray(fields)
     return this.connection.get(
-        'patrons/',
+        '/v4/patrons/',
         { limit, offset, id, fields, createdDate, updatedDate, deletedDate, deleted, suppressed },
     )
   }
 
 
-  getPatronByRecordId(idOrURL, { fields } = {}) {
-    idOrURL = idOrURL.toString()
-    let url = idOrURL.indexOf('://') === -1 ? `patrons/${idOrURL}` : idOrURL
+  getPatronByRecordId(idOrUrl, { fields } = {}) {
     fields = qsUtils.joinArray(fields)
-    return this.connection.get(url, { fields })
+    const apiUrl = this._resolveIdOrUrlToApiUrl(idOrUrl)
+    return this.connection.get(apiUrl, { fields })
   }
 
 
-  getPatronCheckouts(idOrURL, { limit, offset, fields } = {}) {
-    idOrURL = idOrURL.toString()
-    let url = idOrURL.indexOf('://') === -1 ? `patrons/${idOrURL}/checkouts` : `${idOrURL}/checkouts`
+  getPatronCheckouts(idOrUrl, { limit, offset, fields } = {}) {
     fields = qsUtils.joinArray(fields)
-    return this.connection.get(url, { limit, offset, fields })
+    const apiUrl = `${this._resolveIdOrUrlToApiUrl(idOrUrl)}/checkouts`
+    return this.connection.get(apiUrl, { limit, offset, fields })
   }
 
 
   getMetadata({ fields, language } = {}) {
     fields = qsUtils.joinArray(fields)
-    return this.connection.get('patrons/metadata', { fields, language })
+    return this.connection.get('/v4/patrons/metadata', { fields, language })
   }
 
 
   query(offset, limit, queryParameters) {
-    return this.connection.post('patrons/query', { offset, limit }, queryParameters)
+    return this.connection.post('/v4/patrons/query', { offset, limit }, queryParameters)
   }
 
 
-  renewCheckout(checkoutIdOrURL, { acceptLanguage } = {}) {
+  renewCheckout(checkoutIdOrUrl, { acceptLanguage } = {}) {
     // TODO: Set the Accept-Language request header if acceptLanguage is defined
-    checkoutIdOrURL = checkoutIdOrURL.toString()
-    let url = checkoutIdOrURL.indexOf('://') === -1
-        ? `patrons/checkouts/${checkoutIdOrURL}/renewal`
-        : `${checkoutIdOrURL}/renewal`
-    return this.connection.post(url)
+    const apiUrl = `${this._resolveCheckoutIdOrUrlToApiUrl(checkoutIdOrUrl)}/renewal`
+    return this.connection.post(apiUrl)
+  }
+
+
+  _resolveIdOrUrlToApiUrl(idOrUrl) {
+    let recordId
+    if (idOrUrl instanceof RecordId) {
+      recordId = idOrUrl
+    } else {
+      idOrUrl = idOrUrl.toString()
+      if (this.connection.isAbsolute(idOrUrl)) {
+        recordId = new AbsoluteV4ApiUrl(idOrUrl)
+      } else {
+        recordId = new RecordNumber(idOrUrl)
+      }
+    }
+    return recordId.convertTo(RelativeV4ApiUrl, { recordTypeCode: 'p'}).toString()
+  }
+
+
+  _resolveCheckoutIdOrUrlToApiUrl(checkoutIdOrUrl) {
+    const str = checkoutIdOrUrl.toString()
+    return this.connection.isAbsolute(str) ? checkoutIdOrUrl : `/v4/patrons/checkouts/${checkoutIdOrUrl}`
   }
 
 }

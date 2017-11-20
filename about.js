@@ -18,19 +18,22 @@
 'use strict'
 
 
-const config = require('./config')
 const rp = require('request-promise-any')
 const { URL } = require('url')
 
 
-function about({ host, baseURL } = config) {
-  const aboutURL = new URL('about', baseURL)
-  return (
-      rp({ uri: aboutURL, json: true })
-      .catch(err => {
-        throw new Error(`Failed to get the Sierra API about page from ${host}: ${err}`)
-      })
-  )
+async function about({ apiHost, apiPath } = {}) {
+  this.apiHost = apiHost || process.env['SIERRA_API_HOST']
+  if (!this.apiHost) {
+    throw new Error('The SIERRA_API_HOST environment variable is not set')
+  }
+  this.apiPath = apiPath || process.env['SIERRA_API_PATH'] || '/iii/sierra-api/'
+  const aboutURL = new URL(`https://${this.apiHost}${this.apiPath}about`)
+  try {
+    return await rp({ uri: aboutURL, json: true })
+  } catch (err) {
+    throw new Error(`Failed to get the Sierra API about page from ${apiHost}: ${err}`)
+  }
 }
 
 
