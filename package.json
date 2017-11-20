@@ -6,7 +6,7 @@
   "main": "index.js",
   "repository": "SydneyUniLibrary/sierra-api-as-promised",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=8.9.0"
   },
   "dependencies": {
     "@sydneyunilibrary/sierra-record-id": "github:SydneyUniLibrary/sierra-record-id#v0.2.0",
