@@ -10,15 +10,13 @@ Simplifies access to the Sierra REST APIs from Node.js.
 npm install 'SydneyUniLibrary/sierra-api-as-promised#v0.1'
 ```
 
-Create a .env file in the root directory of your project, like the following.
+Set up the following variables in process's environment.
 
 ```
 SIERRA_API_HOST=sierra.library.edu
 SIERRA_API_KEY="my-api-key"
 SIERRA_API_SECRET="my-api-secret"
 ```
-
-> **Never** commit this .env file into a source control repository.
 
 In your code, require the library.
 
@@ -144,9 +142,12 @@ async function findAndExportPatrons() {
 findAndExportPatrons().catch(console.error)
 ```
 
+
+
+
 ## Configuration
 
-Configurate sierra-api-as-promised by setting environment variables.
+Configurate sierra-api-as-promised by setting the environment variables in your process.
 
 ### Envrionment variables
 
@@ -158,16 +159,6 @@ SIERRA_API_SECRET | The secret (password) matching the API key    |
 SIERRA_API_PATH   | The URL path for the Sierra API (\*1)         | /iii/sierra-api/
 
 (\*1) `SIERRA_API_PATH` must not include the API version in the path. `/iii/sierra-api/` is correct. `/iii/sierra-api/v4/` is not.
-
-### .env file
-
-A .env file in your project's base directory, where `package.json` is, will be loaded by [dotenv](https://github.com/motdotla/dotenv)
-as part of requiring sierra-api-as-promised. Anything in here, including other variables than those used by this library, will be added
-to your envrionment and will be accessible via `process.env`.
-
-When dotenv loads the .env file, it will not change any environment variables that are already defined. You can't use
-to it redefine something like `PATH`. This also means that if you set `SIERRA_API_HOST`, for example, in your environment
-before running your code, the value you set will take precedence over the value in the .env file.
 
 
 
