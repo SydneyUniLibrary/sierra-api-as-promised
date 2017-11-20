@@ -18,9 +18,6 @@
  */
 
 
-require('dotenv').load()
-
-
 module.exports = {
   about: require('./about'),
   v4: require('./v4'),
