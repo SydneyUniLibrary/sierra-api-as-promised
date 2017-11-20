@@ -1,5 +1,3 @@
-'use strict'
-
 /*
  Copyright (C) 2017  The University of Sydney Library
 
@@ -16,6 +14,9 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+'use strict'
+
 
 const ClientOAuth2 = require('client-oauth2')
 const config = require('../config')
