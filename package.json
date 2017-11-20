@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "client-oauth2": "^4.1.0",
-    "request": "^2.81.0",
-    "request-promise-any": "^1.0.4"
+    "request": "^2.83.0",
+    "request-promise-any": "^1.0.5"
   }
 }
