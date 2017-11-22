@@ -20,7 +20,7 @@
 
 const { AbsoluteV4ApiUrl, RecordId, RecordNumber, RelativeV4ApiUrl } = require('@sydneyunilibrary/sierra-record-id')
 
-const { toDateTimeRange } = require('../lib/dt-utils')
+const { toDateRange, toDateTimeRange } = require('../lib/dt-utils')
 const qsUtils = require('../qs-utils')
 
 
@@ -41,7 +41,7 @@ class SierraPatronApi_v4 {
   getPatrons({ limit, offset, id, fields, createdDate, updatedDate, deletedDate, deleted, suppressed } = {}) {
     createdDate = toDateTimeRange(createdDate)
     updatedDate = toDateTimeRange(updatedDate)
-    //deletedDate = toDateRange(deletedDate) TODO: Uncomment this once toDateRange is written
+    deletedDate = toDateRange(deletedDate)
     id = qsUtils.joinArray(id)
     fields = qsUtils.joinArray(fields)
     return this.connection.get(
