@@ -1,6 +1,6 @@
 {
   "name": "@sydneyunilibrary/sierra-api-as-promised",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Simplifies access to the Sierra REST APIs from Node.js using request-promise-any.",
   "license": "GPL-3.0",
   "main": "index.js",
