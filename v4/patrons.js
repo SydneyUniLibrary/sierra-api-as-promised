@@ -18,8 +18,10 @@
 'use strict'
 
 
-const qsUtils = require('../qs-utils')
 const { AbsoluteV4ApiUrl, RecordId, RecordNumber, RelativeV4ApiUrl } = require('@sydneyunilibrary/sierra-record-id')
+
+const { toDateRange, toDateTimeRange } = require('../lib/dt-utils')
+const qsUtils = require('../qs-utils')
 
 
 class SierraPatronApi_v4 {
@@ -37,6 +39,9 @@ class SierraPatronApi_v4 {
 
 
   getPatrons({ limit, offset, id, fields, createdDate, updatedDate, deletedDate, deleted, suppressed } = {}) {
+    createdDate = toDateTimeRange(createdDate)
+    updatedDate = toDateTimeRange(updatedDate)
+    deletedDate = toDateRange(deletedDate)
     id = qsUtils.joinArray(id)
     fields = qsUtils.joinArray(fields)
     return this.connection.get(
@@ -61,6 +66,7 @@ class SierraPatronApi_v4 {
 
 
   getPatronFines(idOrUrl, { limit, offset, fields, assessedDate } = {}) {
+    assessedDate = toDateTimeRange(assessedDate)
     fields = qsUtils.joinArray(fields)
     const apiUrl = `${this._resolveIdOrUrlToApiUrl(idOrUrl)}/fines`
     return this.connection.get(apiUrl, { limit, offset, fields, assessedDate })

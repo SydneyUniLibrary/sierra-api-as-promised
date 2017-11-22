@@ -8,10 +8,20 @@
   "engines": {
     "node": ">=8.9.0"
   },
+  "scripts": {
+    "test": "mocha"
+  },
   "dependencies": {
     "@sydneyunilibrary/sierra-record-id": "github:SydneyUniLibrary/sierra-record-id#v0.2.0",
     "client-oauth2": "^4.1.0",
     "request": "^2.83.0",
     "request-promise-any": "^1.0.5"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "jsverify": "^0.8.3",
+    "luxon": "~0.0.22",
+    "mocha": "*",
+    "moment": "^2.19.2"
   }
 }
