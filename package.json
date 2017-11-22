@@ -13,5 +13,12 @@
     "client-oauth2": "^4.1.0",
     "request": "^2.83.0",
     "request-promise-any": "^1.0.5"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "jsverify": "^0.8.3",
+    "luxon": "~0.0.22",
+    "mocha": "*",
+    "moment": "^2.19.2"
   }
 }
