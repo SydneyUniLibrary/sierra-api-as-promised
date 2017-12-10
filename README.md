@@ -7,7 +7,7 @@ Simplifies access to the Sierra REST APIs from Node.js.
 ## How to use
 
 ```
-npm install 'SydneyUniLibrary/sierra-api-as-promised#v0.2.0'
+npm install 'SydneyUniLibrary/sierra-api-as-promised#v0.4.0'
 ```
 
 Set up the following variables in process's environment.
@@ -21,10 +21,22 @@ SIERRA_API_SECRET="my-api-secret"
 In your code, require the library.
 
 ```javascript
-const sierraAPI = require('@sydneyunilibrary/sierra-api-as-promised').v4
+const { SierraAPIAsPromised } = require('@sydneyunilibrary/sierra-api-as-promised')
+
+const sierraApi = await SierraAPIAsPromised()
 ```
 
-> Note the `.v4` after `require(…)`. These is necessary.
+Alternatively, you can pass the API host, key and secret directly.
+
+```javascript
+const { SierraAPIAsPromised } = require('@sydneyunilibrary/sierra-api-as-promised')
+
+const sierraApi = await SierraAPIAsPromised({
+  apiHost: 'sierra.library.edu',
+  apiKey: 'my-api-key',
+  apiSecret: 'my-api-secret'
+})
+```
 
 
 
@@ -33,7 +45,6 @@ const sierraAPI = require('@sydneyunilibrary/sierra-api-as-promised').v4
 
 See [the Wiki](https://github.com/SydneyUniLibrary/sierra-api-as-promised/wiki). 
 
-
 ### Example 1
 
 The following Node.js v8 script prints the entries in the Patron Type table. 
@@ -41,10 +52,11 @@ The following Node.js v8 script prints the entries in the Patron Type table.
 ```javascript
 'use strict'
 
-const sierraApi = require('@sydneyunilibrary/sierra-api-as-promised').v4
+const { SierraAPIAsPromised } = require('@sydneyunilibrary/sierra-api-as-promised')
 
 async function printPatronTypes() {
-  let metadataArray = await sierraApi.patrons.getMetadata({ fields: 'patronType' })
+  const sierraAPI = await SierraAPIAsPromised()
+  let metadataArray = await sierraAPI.patrons.getMetadata({ fields: 'patronType' })
   for (let metadata of metadataArray) {
     console.log('\nTable: %s\n', metadata.field)
     console.log('Code\tDesc')
@@ -74,10 +86,11 @@ So that this example is not too long and complicated, it only exports the first 
 ```javascript
 'use strict'
 
-const sierraApi = require('@sydneyunilibrary/sierra-api-as-promised').v4
-
+const { SierraAPIAsPromised } = require('@sydneyunilibrary/sierra-api-as-promised')
 
 async function findAndExportPatrons() {
+
+  const sierraAPI = await SierraAPIAsPromised()
 
   const booleanSearch = [
     {
@@ -107,13 +120,13 @@ async function findAndExportPatrons() {
   ]
 
   /* Submit the query, getting back a list of links (full URLs to the patron) */
-  let patronLinks = await sierraApi.patrons.query(0, 10, booleanSearch)
+  let patronLinks = await sierraAPI.patrons.query(0, 10, booleanSearch)
 
   /* Transform the list of links to a list of IDs */
   let patronIDs = patronLinks.entries.map(({ link }) => link.substr(link.lastIndexOf('/') + 1))
 
   /* The patron records with those IDs */
-  let patronResultSet = await sierraApi.patrons.getPatrons({ id: patronIDs, fields: exportFields })
+  let patronResultSet = await sierraAPI.patrons.getPatrons({ id: patronIDs, fields: exportFields })
 
   /* Export the patrons as a tab-delimited file */
   console.log(exportFields.join('\t'))
@@ -147,13 +160,13 @@ findAndExportPatrons().catch(console.error)
 
 ## Configuration
 
-Configurate sierra-api-as-promised by setting the environment variables in your process.
+Configure sierra-api-as-promised by setting the environment variables in your process.
 
 ### Envrionment variables
 
 Variable          | Description                                   | Default
 ------------------|-----------------------------------------------|------------------
-SIERRA_API_HOST   | The hostname of the Sirrea application server | 
+SIERRA_API_HOST   | The hostname of the Sierra application server | 
 SIERRA_API_KEY    | A Sierra API key                              |
 SIERRA_API_SECRET | The secret (password) matching the API key    |
 SIERRA_API_PATH   | The URL path for the Sierra API (\*1)         | /iii/sierra-api/

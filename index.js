@@ -18,7 +18,31 @@
 'use strict'
 
 
+const { SierraAPIConnection } = require('./lib/connection')
+
+
+/**
+ * Creates a connection to the Sierra API.
+ *
+ * This is an expensive function. Call it once and store the returned connection.
+ *
+ * @param {Object} [configuration] - An object with configuration that overrides any process environment variables.
+ * @param {String} [configuration.apiHost] - The hostname of the Sierra application server. Defaults to SIERRA_API_HOST env var.
+ * @param {String} [configuration.apiPath] - The URL path for the Sierra API. Defaults to SIERRA_API_PATH env var,
+ *                                           or '/iii/sierra-api/' if SIERRA_API_PATH env var is not set.
+ * @param {String} [configuration.apiKey] - A Sierra API key. Defaults to SIERRA_API_KEY env var.
+ * @param {String} [configuration.apiSecret] - The secret (password) matching the API key. Defaults to SIERRA_API_SECRET env var.
+ * @param {Number} [configuration.apiMajorVersion] - The major version of the Sierra API to use.
+ *                                                   If not given, use the latest API version supported by both the
+ *                                                   Sierra host and this library.
+ * @returns {Promise.<SierraAPIConnection>}
+ */
+async function SierraAPIAsPromised(configuration = {}) {
+  const connection = new SierraAPIConnection(configuration)
+  return await connection._initialise()
+}
+
+
 module.exports = {
-  about: require('./about'),
-  v4: require('./v4'),
+  SierraAPIAsPromised
 }
