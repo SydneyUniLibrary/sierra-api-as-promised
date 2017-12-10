@@ -22,7 +22,7 @@ const { SierraAPIConnection } = require('./lib/connection')
 
 
 /**
- * Creates a connection to the Sierra API using the latest API version supported by other the Sierra host and this library.
+ * Creates a connection to the Sierra API.
  *
  * This is an expensive function. Call it once and store the returned connection.
  *
@@ -32,6 +32,9 @@ const { SierraAPIConnection } = require('./lib/connection')
  *                                           or '/iii/sierra-api/' if SIERRA_API_PATH env var is not set.
  * @param {String} [configuration.apiKey] - A Sierra API key. Defaults to SIERRA_API_KEY env var.
  * @param {String} [configuration.apiSecret] - The secret (password) matching the API key. Defaults to SIERRA_API_SECRET env var.
+ * @param {Number} [configuration.apiMajorVersion] - The major version of the Sierra API to use.
+ *                                                   If not given, use the latest API version supported by both the
+ *                                                   Sierra host and this library.
  * @returns {Promise.<SierraAPIConnection>}
  */
 async function SierraAPIAsPromised(configuration = {}) {
