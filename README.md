@@ -7,7 +7,7 @@ Simplifies access to the Sierra REST APIs from Node.js.
 ## How to use
 
 ```
-npm install 'SydneyUniLibrary/sierra-api-as-promised#v0.4.0'
+npm install 'SydneyUniLibrary/sierra-api-as-promised#v0.4.2'
 ```
 
 Set up the following variables in process's environment.

@@ -1,6 +1,6 @@
 {
   "name": "@sydneyunilibrary/sierra-api-as-promised",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Simplifies access to the Sierra REST APIs from Node.js using request-promise-any.",
   "license": "GPL-3.0",
   "main": "index.js",
@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@sydneyunilibrary/sierra-record-id": "github:SydneyUniLibrary/sierra-record-id#v0.3.0",
-    "client-oauth2": "^4.1.0",
-    "request": "^2.83.0",
+    "client-oauth2": "^4.2.0",
+    "request": "^2.85.0",
     "request-promise-any": "^1.0.5"
   },
   "devDependencies": {
@@ -22,6 +22,6 @@
     "jsverify": "^0.8.3",
     "luxon": "~0.0.22",
     "mocha": "*",
-    "moment": "^2.19.3"
+    "moment": "^2.22.1"
   }
 }
